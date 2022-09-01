@@ -2,6 +2,7 @@ import pandas as pd
 from datetime import datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
 import scraper
+import requests
 
 # Definindo a data de ontem
 # Fuso horário
@@ -24,11 +25,29 @@ for station in stations:
     df = df.append(df_temp)
 
 # Preparando o Request Body
+df = df.astype(str)
+df.rename(columns={'ISO8601': 'timeStamp', 'Station': 'station', 'Temperature': 'temperature','Dew Point': 'dewPoint',
+                'Humidity': 'humidity','Wind': 'windDirection','Speed': 'windSpeed',
+                'Gust': 'gust','Pressure': 'pressure','Precip. Rate.': 'precipitationRate',
+                'Precip. Accum.': 'precipitationAcc','UV': 'uv','Solar': 'solarIrradiation'},inplace=True)
+
 list_dict = []
 for index, row in list(df.iterrows()):
     list_dict.append(dict(row))
 
-print(list_dict)
+body = { 'data': list_dict }
+
+
 
 # Enviar dados via API
 # TODO
+api_url = "http://localhost:5000/data/"
+
+# Limpa os dados anteriores
+response = requests.delete(api_url)
+
+# Adiciona os dados atualizados
+if(response.status_code == 204):
+    response = requests.post(api_url, json=body)
+    print(response.status_code)
+
