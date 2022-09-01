@@ -40,7 +40,7 @@ def to_dataframe(estacao, date):
     def g(x): return x * 1.60934
     df2[['Speed', 'Gust']] = df2[['Speed', 'Gust']].applymap(g).round(1)
     # Identifica a estação na tabela
-    df2['Estação'] = estacao
+    df2['Station'] = estacao
 
     # Converte o horário para o formato ISO8601
     date = datetime.strptime(date, "%Y-%m-%d")
