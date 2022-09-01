@@ -23,7 +23,12 @@ for station in stations:
     df_temp = scraper.to_dataframe(station, date)
     df = df.append(df_temp)
 
-print(df)
+# Preparando o Request Body
+list_dict = []
+for index, row in list(df.iterrows()):
+    list_dict.append(dict(row))
+
+print(list_dict)
 
 # Enviar dados via API
 # TODO
